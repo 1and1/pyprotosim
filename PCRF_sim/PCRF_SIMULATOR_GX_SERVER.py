@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 ##################################################################
 # Copyright (c) 2012, Sergej Srepfler <sergej.srepfler@gmail.com>
 # February 2012 - March 2014
@@ -39,6 +39,7 @@ sys.path.append("..")
 import socket
 import select
 import logging
+import ssl
 from libDiameter import *
 
 SKIP=0
@@ -459,6 +460,9 @@ if __name__ == "__main__":
     PCRF_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # fix "Address already in use" error upon restart
     PCRF_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    PCRF_server = ssl.wrap_socket(PCRF_server, server_side=True, keyfile="/root/key.pem", certfile="/root/cert.pem")
+
     PCRF_server.bind((HOST, DIAM_PORT))  
     PCRF_server.listen(MAX_CLIENTS)
     sock_list.append(PCRF_server)
