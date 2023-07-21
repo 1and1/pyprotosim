@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 ##################################################################
 # Copyright (c) 2012, Sergej Srepfler <sergej.srepfler@gmail.com>
 # February 2012 - March 2014
@@ -14,6 +14,7 @@ sys.path.append("..")
 
 #
 
+import ssl
 from libDiameter import *
 
 
@@ -22,7 +23,10 @@ if __name__ == '__main__':
     PORT=3868
 
 
-Conn=Connect(HOST,PORT)
+#Conn=Connect(HOST,PORT)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+Conn = ssl.wrap_socket(sock)
+Conn.connect((HOST, PORT))
 
 LoadDictionary("../dictDiameter.xml")
 
