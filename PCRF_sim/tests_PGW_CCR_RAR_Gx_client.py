@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2.7
 ###############################################################################
 # Copyright (c) 2012, Sergej Srepfler <sergej.srepfler@gmail.com>
 #               2014, PGW client tests are added by L.Belov <lavrbel@gmail.com>
@@ -50,6 +50,7 @@ sys.path.append("..")
 from libDiameter import *
 import datetime
 import time
+import ssl
 
 
 def create_CER():
@@ -199,7 +200,10 @@ if __name__ == "__main__":
     # Let's assume that my Diameter messages will fit into 4k
     MSG_SIZE=4096
     # Connect to server
-    Conn=Connect(HOST,PORT)
+    #Conn=Connect(HOST,PORT)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    Conn = ssl.wrap_socket(sock)
+    Conn.connect((HOST, PORT))
     ###########################################################
     # Let's build CER
     msg=create_CER()
