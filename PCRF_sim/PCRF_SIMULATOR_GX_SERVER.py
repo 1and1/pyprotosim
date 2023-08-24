@@ -151,6 +151,13 @@ def create_AAA(H):
     global DEST_REALM
     AAR_avps=splitMsgAVPs(H.msg)
     DEST_REALM=findAVP("Origin-Realm",AAR_avps)   
+
+    sid = ""
+    for avp in AAR_avps:
+        decoded_avp = decodeAVP(avp)
+        if "Session-Id" in decoded_avp[0]:
+            sid = decoded_avp[1]
+            break
          
     # Let's build AA Answer
     AAA_avps=[]
@@ -163,6 +170,8 @@ def create_AAA(H):
     AAA_avps.append(encodeAVP("Supported-Vendor-Id", 11112))
     AAA_avps.append(encodeAVP("Supported-Vendor-Id", 0))
     AAA_avps.append(encodeAVP("Result-Code", 2001))   #DIAMETER_SUCCESS 2001
+    AAA_avps.append(encodeAVP("Session-Id", sid))
+
     # Create message header (empty)
     AAA=HDRItem()
     # Set command code
