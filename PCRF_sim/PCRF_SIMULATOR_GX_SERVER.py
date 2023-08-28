@@ -37,9 +37,11 @@ sys.path.append("..")
 
 
 import socket
+import sctp                                                                                     
+from sctp import * 
 import select
 import logging
-import ssl
+#import ssl
 from libDiameter import *
 
 SKIP=0
@@ -125,7 +127,7 @@ def create_CEA(H):
     CEA_avps.append(encodeAVP("Vendor-Id", 11111))
     CEA_avps.append(encodeAVP("Product-Name", "PCRF-SIM"))
     #CEA_avps.append(encodeAVP("Host-IP-Address", "127.0.0.1"))
-    CEA_avps.append(encodeAVP('Auth-Application-Id', 16777238))
+    CEA_avps.append(encodeAVP('Auth-Application-Id', 16777236))
     CEA_avps.append(encodeAVP("Supported-Vendor-Id", 10415))
     CEA_avps.append(encodeAVP("Supported-Vendor-Id", 11112))
     CEA_avps.append(encodeAVP("Supported-Vendor-Id", 0))
@@ -303,7 +305,7 @@ def create_CCA(H):
        CCA_avps.append(encodeAVP('Origin-Realm', ORIGIN_REALM))
        CCA_avps.append(encodeAVP('CC-Request-Type', CCA_REQUEST_TYPE))
        CCA_avps.append(encodeAVP('CC-Request-Number', 0))
-       CCA_avps.append(encodeAVP('Auth-Application-Id', 16777238))
+       CCA_avps.append(encodeAVP('Auth-Application-Id', 16777236))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 0))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 10415))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 11112))
@@ -337,7 +339,7 @@ def create_CCA(H):
        CCA_avps.append(encodeAVP('Origin-Realm', ORIGIN_REALM))
        CCA_avps.append(encodeAVP('CC-Request-Type', CCA_REQUEST_TYPE))
        CCA_avps.append(encodeAVP('CC-Request-Number', 0))
-       CCA_avps.append(encodeAVP('Auth-Application-Id', 16777238))
+       CCA_avps.append(encodeAVP('Auth-Application-Id', 16777236))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 0))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 10415))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 11112))
@@ -370,7 +372,7 @@ def create_CCA(H):
        CCA_avps.append(encodeAVP('Origin-Realm',ORIGIN_REALM))
        CCA_avps.append(encodeAVP('CC-Request-Type', CCA_REQUEST_TYPE))
        CCA_avps.append(encodeAVP('CC-Request-Number', 0))
-       CCA_avps.append(encodeAVP('Auth-Application-Id', 16777238))
+       CCA_avps.append(encodeAVP('Auth-Application-Id', 16777236))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 0))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 10415))
        CCA_avps.append(encodeAVP('Supported-Vendor-Id', 11112))
@@ -448,10 +450,10 @@ if __name__ == "__main__":
     # MANDATORY TO CHANGE: THIS IS IP/PORT OF PCRF SERVER
     
     HOST = "127.0.0.1"
-    DIAM_PORT = 3868
+    DIAM_PORT = 3898
 
     # Define command port to trigger RAR-T/RAR-U and other PCRF initiated (Push) commands
-    CMD_PORT = 3869
+    CMD_PORT = 3899
     
     # MANDATORY TO CHANGE: TO YOUR PCRF REALM values
     
@@ -466,11 +468,12 @@ if __name__ == "__main__":
     sock_list=[]
    
     # Create the server, binding to HOST:DIAM_PORT
-    PCRF_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #PCRF_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    PCRF_server = sctpsocket_tcp(socket.AF_INET)
     # fix "Address already in use" error upon restart
     PCRF_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    PCRF_server = ssl.wrap_socket(PCRF_server, server_side=True, keyfile="/root/key.pem", certfile="/root/cert.pem")
+    #PCRF_server = ssl.wrap_socket(PCRF_server, server_side=True, keyfile="/root/pyprotosim-master/PCRF_sim/key.pem", certfile="/root/pyprotosim-master/PCRF_sim/cert.pem")
 
     PCRF_server.bind((HOST, DIAM_PORT))  
     PCRF_server.listen(MAX_CLIENTS)
